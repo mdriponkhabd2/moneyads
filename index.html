@@ -46,9 +46,9 @@ body {margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#0d1117;color:
 <div id="tasks-view" class="view">
   <div class="header"><h1>📝 Tasks</h1></div>
   <div class="card">
-    <h2>Click Task Button to earn 10৳</h2>
+    <h2>Click Task Button to earn 5৳</h2>
     <p>Max 20 times</p>
-    <button class="btn" id="taskBtn">Complete Task +10৳</button>
+    <button class="btn" id="taskBtn">Complete Task +5৳</button>
     <p>Completed: <span id="taskCount">0</span>/20</p>
   </div>
 </div>
@@ -58,10 +58,10 @@ body {margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#0d1117;color:
   <div class="header"><h1>📺 Ads</h1></div>
   <div class="card">
     <h2>Watch & Earn</h2>
-    <p>Click button to open ad and earn 10৳</p>
-    <button class="btn" id="adBtn1">View Ad 1 +10৳</button>
-    <button class="btn" id="adBtn2">View Ad 2 +10৳</button>
-    <p>Ad clicks: <span id="adCount">0</span>/10</p>
+    <p>Click button to open ad and earn 5৳</p>
+    <button class="btn" id="adBtn1">View Ad 1 +5৳</button>
+    <button class="btn" id="adBtn2">View Ad 2 +5৳</button>
+    <p>Ad clicks: <span id="adCount">0</span>/5</p>
   </div>
 </div>
 
@@ -80,7 +80,7 @@ body {margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#0d1117;color:
   <div class="header"><h1>Withdraw</h1><p>Enter amount & bKash/Nagad number</p></div>
   <div class="card">
     <h2>Your Balance</h2>
-    <div class="balance-amount" id="withdrawBalanceDisplay">৳ 0.00</div>
+    <div class="balance-amount" id="withdrawBalanceDisplay">৳ 30.00</div>
     <p style="color:#bbb;margin-top:15px;">Minimum withdrawal is ৳100.</p>
   </div>
   <div class="card">
@@ -122,7 +122,7 @@ let state = {
   taskCount: 0,
   TASK_LIMIT: 20,
   adCount: 0,
-  AD_LIMIT: 10,
+  AD_LIMIT: 02,
   referralGiven: false
 };
 
@@ -147,7 +147,7 @@ document.getElementById("copyReferral").addEventListener("click", () => {
 document.getElementById("taskBtn").addEventListener("click", ()=>{
   if(state.taskCount >= state.TASK_LIMIT){ alert("Task limit reached!"); return;}
   state.taskCount +=1;
-  state.balanceInCents += 1000; // 10৳
+  state.balanceInCents += 1000; // 5৳
   updateUI();
   window.open(`https://informationbdno1.blogspot.com/${state.taskCount}`, "_blank");
 });
@@ -156,7 +156,7 @@ document.getElementById("taskBtn").addEventListener("click", ()=>{
 function adClick(url){
   if(state.adCount >= state.AD_LIMIT){ alert("Ad limit reached!"); return;}
   state.adCount +=1;
-  state.balanceInCents += 1000; // 10৳
+  state.balanceInCents += 1000; // 5৳
   updateUI();
   window.open(url,"_blank");
 }
