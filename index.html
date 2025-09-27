@@ -130,7 +130,7 @@ function initUser(){
   const user = tg.initDataUnsafe.user;
   document.getElementById("userName").innerText = "User: " + user.first_name + " " + (user.last_name || "");
   document.getElementById("userId").innerText = "ID: " + user.id;
-  const link = `@kopmoneybd_bot=${user.id}`;
+  const link = `https://t.me/kopmoneybd_bot=${user.id}`;
   document.getElementById("refLink").value = link;
 }
 
@@ -239,3 +239,4 @@ updateUI();
 </script>
 </body>
 </html> 
+
