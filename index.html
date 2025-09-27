@@ -122,7 +122,7 @@ let state = {
   taskCount: 0,
   TASK_LIMIT: 20,
   adCount: 0,
-  AD_LIMIT: 02,
+  AD_LIMIT: 10,
   referralGiven: false
 };
 
@@ -147,7 +147,7 @@ document.getElementById("copyReferral").addEventListener("click", () => {
 document.getElementById("taskBtn").addEventListener("click", ()=>{
   if(state.taskCount >= state.TASK_LIMIT){ alert("Task limit reached!"); return;}
   state.taskCount +=1;
-  state.balanceInCents += 1000; // 5৳
+  state.balanceInCents += 400; // 5৳
   updateUI();
   window.open(`https://informationbdno1.blogspot.com/${state.taskCount}`, "_blank");
 });
@@ -156,7 +156,7 @@ document.getElementById("taskBtn").addEventListener("click", ()=>{
 function adClick(url){
   if(state.adCount >= state.AD_LIMIT){ alert("Ad limit reached!"); return;}
   state.adCount +=1;
-  state.balanceInCents += 1000; // 5৳
+  state.balanceInCents += 400; // 5৳
   updateUI();
   window.open(url,"_blank");
 }
