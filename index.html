@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Telegram Mini App</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+body {margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#0d1117;color:#fff;}
+.view{display:none;padding:20px;}
+.view.active{display:block;}
+.header{text-align:center;margin-bottom:20px;}
+.header h1{margin:0;font-size:24px;}
+.card{background:#161b22;padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:0 2px 6px rgba(0,0,0,0.4);}
+.balance-amount{font-size:26px;font-weight:bold;margin-top:10px;}
+.btn{display:block;width:100%;padding:14px;margin-top:12px;border:none;border-radius:10px;background:linear-gradient(90deg,#0088cc,#00aaff);color:#fff;font-size:16px;font-weight:600;cursor:pointer;transition:0.2s;}
+.btn:hover{opacity:0.9;}
+.btn:disabled{background:#555;cursor:not-allowed;}
+.input-group{margin-bottom:15px;text-align:left;}
+.input-group label{display:block;margin-bottom:6px;font-size:14px;color:#bbb;}
+.input-group input,.input-group select{width:100%;padding:14px;border-radius:10px;border:1px solid #333;background:#222;color:#fff;font-size:15px;}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#161b22;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #333;}
+.nav button{background:none;border:none;color:#aaa;font-size:15px;cursor:pointer;display:flex;flex-direction:column;align-items:center;}
+.nav button.active{color:#00aaff;font-weight:bold;}
+.status{text-align:center;padding:10px;border-radius:8px;margin-bottom:15px;}
+.status.success{background:#1e4620;color:#d4edda;}
+.status.error{background:#5f2120;color:#f8d7da;}
+</style>
+</head>
+<body>
+
+<!-- Home/Profile View -->
+<div id="home-view" class="view active">
+  <div class="header"><h1>🏠 Profile</h1></div>
+  <div class="card">
+    <h2 id="userName">User: </h2>
+    <p id="userId">ID: </p>
+    <div class="balance-amount" id="homeBalance">৳ 0.00</div>
+    <p>Referral Link:</p>
+    <input type="text" id="refLink" readonly style="width:100%;padding:10px;border-radius:8px;border:1px solid #333;background:#222;color:#fff;font-size:14px;">
+    <button class="btn" id="copyReferral">Copy Referral</button>
+  </div>
+</div>
+
+<!-- Tasks View -->
+<div id="tasks-view" class="view">
+  <div class="header"><h1>📝 Tasks</h1></div>
+  <div class="card">
+    <h2>Click Task Button to earn 10৳</h2>
+    <p>Max 20 times</p>
+    <button class="btn" id="taskBtn">Complete Task +10৳</button>
+    <p>Completed: <span id="taskCount">0</span>/20</p>
+  </div>
+</div>
+
+<!-- Ads View -->
+<div id="ads-view" class="view">
+  <div class="header"><h1>📺 Ads</h1></div>
+  <div class="card">
+    <h2>Watch & Earn</h2>
+    <p>Click button to open ad and earn 10৳</p>
+    <button class="btn" id="adBtn1">View Ad 1 +10৳</button>
+    <button class="btn" id="adBtn2">View Ad 2 +10৳</button>
+    <p>Ad clicks: <span id="adCount">0</span>/10</p>
+  </div>
+</div>
+
+<!-- Wallet View -->
+<div id="wallet-view" class="view">
+  <div class="header"><h1>💰 Wallet</h1></div>
+  <div class="card">
+    <h2>Your Balance</h2>
+    <div class="balance-amount" id="walletBalance">৳ 0.00</div>
+  </div>
+  <button class="btn" onclick="showView('withdraw-view')">Withdraw</button>
+</div>
+
+<!-- Withdraw View -->
+<div id="withdraw-view" class="view">
+  <div class="header"><h1>Withdraw</h1><p>Enter amount & bKash/Nagad number</p></div>
+  <div class="card">
+    <h2>Your Balance</h2>
+    <div class="balance-amount" id="withdrawBalanceDisplay">৳ 0.00</div>
+    <p style="color:#bbb;margin-top:15px;">Minimum withdrawal is ৳100.</p>
+  </div>
+  <div class="card">
+    <h2>Payment Details</h2>
+    <div class="input-group">
+      <label for="withdrawAmount">Amount</label>
+      <input type="number" id="withdrawAmount" placeholder="Enter amount in ৳">
+    </div>
+    <div class="input-group">
+      <label for="paymentMethod">Select Payment Method</label>
+      <select id="paymentMethod">
+        <option value="bkash">bKash</option>
+        <option value="nagad">Nagad</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label for="paymentNumber">Your Mobile Number</label>
+      <input type="text" id="paymentNumber" placeholder="e.g., 01XXXXXXXXX">
+    </div>
+    <button class="btn" onclick="handleWithdrawal()">Withdraw</button>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="nav">
+  <button onclick="showView('home-view')" class="active">🏠<span>Home</span></button>
+  <button onclick="showView('tasks-view')">📝<span>Tasks</span></button>
+  <button onclick="showView('ads-view')">📺<span>Ads</span></button>
+  <button onclick="showView('wallet-view')">💰<span>Wallet</span></button>
+</div>
+
+<script>
+let tg = window.Telegram.WebApp;
+tg.expand();
+
+// User & State
+let state = {
+  balanceInCents: 0,
+  taskCount: 0,
+  TASK_LIMIT: 20,
+  adCount: 0,
+  AD_LIMIT: 10,
+  referralGiven: false
+};
+
+function initUser(){
+  const user = tg.initDataUnsafe.user;
+  document.getElementById("userName").innerText = "User: " + user.first_name + " " + (user.last_name || "");
+  document.getElementById("userId").innerText = "ID: " + user.id;
+  const link = `https://informationbdno1.blogspot.com=${user.id}`;
+  document.getElementById("refLink").value = link;
+}
+
+// Copy Referral
+document.getElementById("copyReferral").addEventListener("click", () => {
+  const ref = document.getElementById("refLink");
+  ref.select();
+  ref.setSelectionRange(0, 99999); // mobile support
+  document.execCommand("copy");
+  alert("Referral link copied! ✅");
+});
+
+// Tasks
+document.getElementById("taskBtn").addEventListener("click", ()=>{
+  if(state.taskCount >= state.TASK_LIMIT){ alert("Task limit reached!"); return;}
+  state.taskCount +=1;
+  state.balanceInCents += 1000; // 10৳
+  updateUI();
+  window.open(`https://informationbdno1.blogspot.com/${state.taskCount}`, "_blank");
+});
+
+// Ads
+function adClick(url){
+  if(state.adCount >= state.AD_LIMIT){ alert("Ad limit reached!"); return;}
+  state.adCount +=1;
+  state.balanceInCents += 1000; // 10৳
+  updateUI();
+  window.open(url,"_blank");
+}
+document.getElementById("adBtn1").addEventListener("click", ()=>adClick("https://informationbdno1.blogspot.com"));
+document.getElementById("adBtn2").addEventListener("click", ()=>adClick("https://informationbdno1.blogspot.com"));
+
+// Views
+function showView(viewId){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById(viewId).classList.add("active");
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  document.querySelector(`.nav button[onclick="showView('${viewId}')"]`).classList.add("active");
+  updateUI();
+}
+
+// Withdraw
+function showStatus(msg,type){
+  let div = document.createElement("div");
+  div.className = "status "+type;
+  div.innerText = msg;
+  let container = document.getElementById("withdraw-view");
+  container.insertBefore(div, container.firstChild);
+  setTimeout(()=>div.remove(),4000);
+}
+
+function handleWithdrawal(){
+  const amount = parseFloat(document.getElementById("withdrawAmount").value);
+  const balance = state.balanceInCents/100;
+  const method = document.getElementById("paymentMethod").value;
+  const number = document.getElementById("paymentNumber").value.trim();
+
+  if(isNaN(amount) || amount<=0){
+    showStatus("Enter a valid amount", "error"); return;
+  }
+  if(amount>balance){
+    showStatus("Insufficient balance", "error"); return;
+  }
+  if(!/^01[3-9]\d{8}$/.test(number)){
+    showStatus("Enter a valid mobile number", "error"); return;
+  }
+
+  const user = tg.initDataUnsafe.user;
+  const message = `--- Withdrawal Request ---\n\nUser ID: ${user.id}\nName: ${user.first_name} ${user.last_name || ""}\nUsername: @${user.username || "N/A"}\n\nAmount: ${amount} ৳\nMethod: ${method}\nNumber: ${number}`;
+  tg.sendData(message);
+  showStatus("Withdrawal request sent ✅", "success");
+  state.balanceInCents -= amount*100;
+  updateUI();
+  document.getElementById("withdrawAmount").value="";
+  document.getElementById("paymentNumber").value="";
+  showView("home-view");
+}
+
+// Update UI
+function updateUI(){
+  const text = `৳ ${(state.balanceInCents/100).toFixed(2)}`;
+  document.getElementById("walletBalance").innerText=text;
+  document.getElementById("withdrawBalanceDisplay").innerText=text;
+  document.getElementById("homeBalance").innerText=text;
+  document.getElementById("taskCount").innerText=state.taskCount;
+  document.getElementById("adCount").innerText=state.adCount;
+}
+
+// Referral earning
+function checkReferral(){
+  const urlParams = new URLSearchParams(window.location.search);
+  const ref = urlParams.get('start');
+  const user = tg.initDataUnsafe.user;
+  if(ref && !state.referralGiven && parseInt(ref) !== user.id){
+    state.balanceInCents += 1500; // 15৳
+    state.referralGiven = true;
+    alert("Referral bonus +15৳ added!");
+    updateUI();
+  }
+}
+
+initUser();
+checkReferral();
+updateUI();
+
+</script>
+</body>
+</html> 
