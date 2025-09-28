@@ -1,165 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Telegram Mini App</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    /* CSS RESET & BASE */
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: #0d1117;
-      color: #fff;
-    }
-    .view {
-      display: none;
-      padding: 20px;
-    }
-    .view.active {
-      display: block;
-    }
-
-    /* HEADER */
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .header h1 {
-      margin: 0;
-      font-size: 26px;
-      font-weight: 700;
-      color: #00aaff;
-    }
-
-    /* CARD */
-    .card {
-      background: #161b22;
-      padding: 20px;
-      border-radius: 14px;
-      margin-bottom: 20px;
-      box-shadow: 0 6px 15px rgba(0, 170, 255, 0.25);
-    }
-
-    /* BALANCE */
-    .balance-amount {
-      font-size: 28px;
-      font-weight: 700;
-      color: #00aaff;
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    /* BUTTON */
-    .btn {
-      width: 100%;
-      padding: 14px;
-      font-size: 18px;
-      font-weight: 700;
-      border: none;
-      border-radius: 12px;
-      color: #fff;
-      background: linear-gradient(90deg, #0088cc, #00aaff);
-      box-shadow: 0 4px 10px rgba(0, 170, 255, 0.5);
-      cursor: pointer;
-      transition: 0.3s;
-      margin-top: 15px;
-    }
-    .btn:hover:not(:disabled) {
-      filter: brightness(1.1);
-    }
-    .btn:disabled {
-      background: #555 !important;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    /* SOCIAL BUTTON */
-    .social-btn {
-      width: 100%;
-      padding: 14px;
-      margin-top: 10px;
-      font-size: 18px;
-      font-weight: 700;
-      border: none;
-      border-radius: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      color: #fff;
-    }
-    .facebook-btn {
-      background: #1877f2;
-    }
-    .youtube-sub-btn {
-      background: #ff0000;
-    }
-    .youtube-like-btn {
-      background: #e62117;
-    }
-
-    /* INPUT */
-    input, select {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 2px solid #00aaff;
-      background: #0e1621;
-      color: #fff;
-      font-size: 16px;
-      margin-top: 8px;
-    }
-
-    /* REFERRAL */
-    #refLink {
-      text-align: center;
-      font-weight: 600;
-      user-select: all;
-    }
-
-    /* NAV */
-    .nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #161b22;
-      display: flex;
-      justify-content: space-around;
-      padding: 12px 0;
-      border-top: 1px solid #333;
-      z-index: 10;
-    }
-    .nav button {
-      background: none;
-      border: none;
-      color: #aaa;
-      font-size: 14px;
-      font-weight: 600;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-    }
-    .nav button.active {
-      color: #00aaff;
-      font-weight: 700;
-    }
-
-    /* WITHDRAWAL INPUT GROUPS */
-    .input-group {
-      margin-bottom: 15px;
-    }
-    .input-group label {
-      font-weight: 600;
-      color: #00aaff;
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Telegram Mini App</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+body {margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#0d1117;color:#fff;}
+.view{display:none;padding:20px;}
+.view.active{display:block;}
+.header{text-align:center;margin-bottom:20px;}
+.header h1{margin:0;font-size:26px;color:#00aaff;}
+.card{background:#161b22;padding:20px;border-radius:14px;margin-bottom:20px;box-shadow:0 6px 15px rgba(0, 170, 255, 0.25);}
+.balance-amount{font-size:28px;font-weight:700;color:#00aaff;text-align:center;margin-top:10px;}
+.btn{width:100%;padding:14px;font-size:18px;font-weight:700;border:none;border-radius:12px;color:#fff;background:linear-gradient(90deg,#0088cc,#00aaff);box-shadow:0 4px 10px rgba(0, 170, 255, 0.5);cursor:pointer;transition:0.3s;margin-top:15px;}
+.btn:hover:not(:disabled){filter:brightness(1.1);}
+.btn:disabled{background:#555 !important;cursor:not-allowed;box-shadow:none;}
+.input-group{margin-bottom:15px;}
+.input-group label{font-weight:600;color:#00aaff;display:block;margin-bottom:6px;}
+input,select{width:100%;padding:14px;border-radius:10px;border:2px solid #00aaff;background:#0e1621;color:#fff;font-size:16px;margin-top:8px;box-sizing:border-box;}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#161b22;display:flex;justify-content:space-around;padding:12px 0;border-top:1px solid #333;z-index:10;}
+.nav button{background:none;border:none;color:#aaa;font-size:14px;font-weight:600;display:flex;flex-direction:column;align-items:center;cursor:pointer;}
+.nav button.active{color:#00aaff;font-weight:700;}
+.social-btn{width:100%;padding:14px;margin-top:10px;font-size:18px;font-weight:700;border:none;border-radius:12px;display:flex;justify-content:center;align-items:center;cursor:pointer;color:#fff;}
+.facebook-btn{background:#1877f2;}
+.youtube-sub-btn{background:#ff0000;}
+.youtube-like-btn{background:#e62117;}
+</style>
 </head>
 <body>
 
@@ -251,133 +118,119 @@
 </div>
 
 <script>
-  const tg = window.Telegram.WebApp;
-  tg.expand();
+const tg = window.Telegram.WebApp;
+tg.expand();
 
-  // === এখানে তোমার লিংক বসাবে ===
-  const taskUrl = "https://informationbdno1.blogspot.com/";  // Task বাটনে এই লিংক ওপেন হবে
-  const adUrl1 = "https://informationbdno1.blogspot.com/";    // Ad 1 বাটনে এই লিংক ওপেন হবে
-  const adUrl2 = "https://informationbdno1.blogspot.com/";    // Ad 2 বাটনে এই লিংক ওপেন হবে
+// State
+const state = {
+  balanceInCents:0,
+  tasksCompleted:0,
+  adsWatched:0,
+  socialClicks:{fb:0,ytSubscribe:0,ytLike:0,LIMIT:3}
+};
 
-  const fbUrl = "https://informationbdno1.blogspot.com/";
-  const ytUrl = "https://informationbdno1.blogspot.com/";
+// Social URLs
+const fbUrl = "https://informationbdno1.blogspot.com";
+const ytSubscribeUrl = "https://informationbdno1.blogspot.com/";
+const ytLikeUrl = "https://informationbdno1.blogspot.com";
 
-  const state = {
-    balanceInCents: 0,
-    tasksCompleted: 0,
-    adsWatched: 0,
-    socialClicks: { fb: 0, ytSubscribe: 0, ytLike: 0, LIMIT: 3 }
-  };
+// Init User
+function initUser(){
+  const user = tg.initDataUnsafe.user;
+  document.getElementById("userName").innerText = "User: " + user.first_name + " " + (user.last_name||"");
+  document.getElementById("userId").innerText = "ID: " + user.id;
+  document.getElementById("refLink").value = `https://t.me/kopmoneybd_bot?start=${user.id}`;
+}
 
-  function updateUI() {
-    const balance = state.balanceInCents / 100;
-    document.getElementById("homeBalance").textContent = `৳ ${balance.toFixed(2)}`;
-    document.getElementById("walletBalance").textContent = `৳ ${balance.toFixed(2)}`;
-    document.getElementById("withdrawBalanceDisplay").textContent = `৳ ${balance.toFixed(2)}`;
-    document.getElementById("userName").textContent = "User: Telegram User";
-    document.getElementById("userId").textContent = "ID: 123456";
-    document.getElementById("taskCount").textContent = state.tasksCompleted;
-    document.getElementById("adCount").textContent = state.adsWatched;
-    document.getElementById("taskBtn").disabled = (state.tasksCompleted >= 20);
-    document.getElementById("adBtn1").disabled = (state.adsWatched >= 5);
-    document.getElementById("adBtn2").disabled = (state.adsWatched >= 5);
-    document.getElementById("fbFollowBtn").disabled = (state.socialClicks.fb >= state.socialClicks.LIMIT);
-    document.getElementById("ytSubscribeBtn").disabled = (state.socialClicks.ytSubscribe >= state.socialClicks.LIMIT);
-    document.getElementById("ytLikeBtn").disabled = (state.socialClicks.ytLike >= state.socialClicks.LIMIT);
-  }
+// Copy Referral
+document.getElementById("copyReferral").addEventListener("click", ()=>{
+  const ref = document.getElementById("refLink");
+  ref.select();
+  ref.setSelectionRange(0,99999);
+  navigator.clipboard.writeText(ref.value).then(()=>alert("Referral link copied! ✅"));
+});
 
-  function showView(viewId) {
-    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-    document.getElementById(viewId).classList.add("active");
-
-    const navButtons = document.querySelectorAll(".nav button");
-    navButtons.forEach(btn => btn.classList.remove("active"));
-    const viewMap = {
-      "home-view": 0,
-      "tasks-view": 1,
-      "ads-view": 2,
-      "wallet-view": 3
-    };
-    if(viewMap[viewId] !== undefined) {
-      navButtons[viewMap[viewId]].classList.add("active");
-    }
-  }
-
-  // Task বাটন ক্লিক হ্যান্ডলার: লিংক ওপেন + বোনাস
-  document.getElementById("taskBtn").addEventListener("click", () => {
-    if(state.tasksCompleted < 20) {
-      window.open(taskUrl, "_blank");  // লিংক খুলবে নতুন ট্যাবে
-      state.tasksCompleted++;
-      state.balanceInCents += 500;
-      updateUI();
-      alert("Task completed! +5৳");
-    }
-  });
-
-  // Ad বাটন ক্লিক হ্যান্ডলার: লিংক ওপেন + বোনাস
-  function watchAd(url) {
-    if(state.adsWatched < 5) {
-      window.open(url, "_blank"); // লিংক খুলবে নতুন ট্যাবে
-      state.adsWatched++;
-      state.balanceInCents += 500;
-      updateUI();
-      alert("Thanks for watching the ad! +5৳");
-    }
-  }
-  document.getElementById("adBtn1").addEventListener("click", () => watchAd(adUrl1));
-  document.getElementById("adBtn2").addEventListener("click", () => watchAd(adUrl2));
-
-  // Social buttons: ফেসবুক, ইউটিউব সাবস্ক্রাইব, ইউটিউব লাইক
-  function handleSocialClick(type, url) {
-    if(state.socialClicks[type] < state.socialClicks.LIMIT) {
-      window.open(url, "_blank");
-      state.socialClicks[type]++;
-      state.balanceInCents += 500;
-      updateUI();
-      alert(`Thanks for your ${type} support! +5৳`);
-    }
-  }
-  document.getElementById("fbFollowBtn").addEventListener("click", () => handleSocialClick('fb', fbUrl));
-  document.getElementById("ytSubscribeBtn").addEventListener("click", () => handleSocialClick('ytSubscribe', ytUrl));
-  document.getElementById("ytLikeBtn").addEventListener("click", () => handleSocialClick('ytLike', ytUrl));
-
-  // Referral link copy
-  document.getElementById("copyReferral").addEventListener("click", () => {
-    const ref = document.getElementById("refLink");
-    ref.select();
-    ref.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(ref.value).then(() => alert("Referral link copied!"));
-  });
-  document.getElementById("refLink").value = "https://t.me/kopmoneybd_bot?start=ref123456";
-
-  // Withdraw function
-  function handleWithdrawal() {
-    const minWithdraw = 100;
-    const amount = parseFloat(document.getElementById("withdrawAmount").value);
-    const number = document.getElementById("paymentNumber").value.trim();
-    const method = document.getElementById("paymentMethod").value;
-
-    if (isNaN(amount) || amount < minWithdraw) {
-      alert(`Minimum withdrawal is ৳${minWithdraw}`);
-      return;
-    }
-    if (amount > state.balanceInCents / 100) {
-      alert("Insufficient balance");
-      return;
-    }
-    if (!/^01\d{9}$/.test(number)) {
-      alert("Enter a valid Bangladeshi number (e.g. 01XXXXXXXXX)");
-      return;
-    }
-
-    state.balanceInCents -= amount * 100;
-    alert(`Withdrawal of ৳${amount} via ${method} requested.`);
+// Tasks
+document.getElementById("taskBtn").addEventListener("click", ()=>{
+  if(state.tasksCompleted<20){
+    state.tasksCompleted++;
+    state.balanceInCents+=500;
     updateUI();
-    showView("wallet-view");
+    window.open("https://informationbdno1.blogspot.com","_blank");
+    alert("Task completed! +5৳");
   }
+});
 
+// Ads
+function watchAd(url){
+  if(state.adsWatched<5){
+    state.adsWatched++;
+    state.balanceInCents+=500;
+    updateUI();
+    window.open(url,"_blank");
+    alert("Thanks for watching ad! +5৳");
+  }
+}
+document.getElementById("adBtn1").addEventListener("click",()=>watchAd("https://informationbdno1.blogspot.com"));
+document.getElementById("adBtn2").addEventListener("click",()=>watchAd("https://informationbdno1.blogspot.com"));
+
+// Social Buttons
+function handleSocialClick(type,url){
+  if(state.socialClicks[type]<state.socialClicks.LIMIT){
+    window.open(url,"_blank");
+    state.socialClicks[type]++;
+    state.balanceInCents+=500;
+    updateUI();
+    alert(`Thanks for your ${type} support! +5৳`);
+  } else {
+    alert("You reached the limit for this action.");
+  }
+}
+document.getElementById("fbFollowBtn").addEventListener("click", ()=>handleSocialClick('fb', fbUrl));
+document.getElementById("ytSubscribeBtn").addEventListener("click", ()=>handleSocialClick('ytSubscribe', ytSubscribeUrl));
+document.getElementById("ytLikeBtn").addEventListener("click", ()=>handleSocialClick('ytLike', ytLikeUrl));
+
+// Navigation
+function showView(viewId){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById(viewId).classList.add("active");
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  document.querySelector(`.nav button[onclick="showView('${viewId}')"]`).classList.add("active");
+}
+
+// Withdraw
+function handleWithdrawal(){
+  const amount=parseFloat(document.getElementById("withdrawAmount").value);
+  const number=document.getElementById("paymentNumber").value.trim();
+  const method=document.getElementById("paymentMethod").value;
+  if(isNaN(amount)||amount<100){alert("Minimum withdrawal is ৳100"); return;}
+  if(amount>(state.balanceInCents/100)){alert("Insufficient balance"); return;}
+  if(!/^01\d{9}$/.test(number)){alert("Enter valid number"); return;}
+  const user=tg.initDataUnsafe.user;
+  const msg=`--- Withdrawal ---\nUser ID: ${user.id}\nName: ${user.first_name} ${user.last_name||""}\nAmount: ${amount}৳\nMethod: ${method}\nNumber: ${number}`;
+  tg.sendData(msg);
+  alert("Withdrawal request sent ✅");
+  state.balanceInCents-=amount*100;
   updateUI();
-</script>
+  document.getElementById("withdrawAmount").value="";
+  document.getElementById("paymentNumber").value="";
+  showView("wallet-view");
+}
 
+// Update UI
+function updateUI(){
+  const bal=`৳ ${(state.balanceInCents/100).toFixed(2)}`;
+  document.getElementById("homeBalance").innerText=bal;
+  document.getElementById("walletBalance").innerText=bal;
+  document.getElementById("withdrawBalanceDisplay").innerText=bal;
+  document.getElementById("taskCount").innerText=state.tasksCompleted;
+  document.getElementById("adCount").innerText=state.adsWatched;
+}
+
+// Init
+initUser();
+updateUI();
+
+</script>
 </body>
 </html>
